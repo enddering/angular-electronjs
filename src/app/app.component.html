@@ -41,27 +41,40 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </div>
+
+        <table class="table table-sm table-hover" *ngIf="ws.tickerData">
+          <thead>
+              <tr>
+                <th scope="col">Buy</th>
+                <th scope="col">Sell</th>
+                <th scope="col">Vol</th>
+                <th scope="col">Last</th>
+                <th scope="col">DayHigh</th>
+                <th scope="col">DayLow</th>
+                <th scope="col">Close</th>
+                <th scope="col">Open</th>
+                <th scope="col">Change</th>            
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ws.tickerData.buy}}</td>
+                <td>{{ws.tickerData.sell}}</td>
+                <td>{{ws.tickerData.vol}}</td>
+                <td>{{ws.tickerData.last}}</td>
+                <td>{{ws.tickerData.dayHigh}}</td>
+                <td>{{ws.tickerData.dayLow}}</td>
+                <td>{{ws.tickerData.close}}</td>
+                <td>{{ws.tickerData.open}}</td>
+                <td>{{ws.tickerData.change}}</td>
+              </tr>
+          </table>
       </div>
     </div>
 
     <div class="container-fluid">
-        <table class="table" *ngIf="ws.tickerData">
-          <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-              </tr>
-            </thead>
-            <tbody *ngFor="let trow of ws.tickerData.data">
-              <tr>
-                <th scope="row">{{trow}}</th>
-                <td>{{trow}}</td>
-              </tr>
-          </table>
+        
     </div>
 
   </div>
-
-  <div class="container-fluid" id="status"></div>
-  <div class="container-fluid" id="output"></div>
 </div>

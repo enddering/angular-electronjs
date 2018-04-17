@@ -15,10 +15,11 @@ export class AppComponent {
   public defaultBuy      = 'mith';
   public defaultCurrency = 'usdt';
 
-  public buyList = ['mith', 'trx'];
+  public buyList = ['mith', 'trx', 'okb'];
   public currencyList = ['usdt', 'btc', 'eth'];
   constructor (private sign: LoginService, private ws: OkexwsService) {
    this.title = 'Hello World';
+   // tslint:disable-next-line:no-shadowed-variable
    this.sign.check((state: Boolean) => {
       if (state) {
         this.isLogin = true;
@@ -44,8 +45,11 @@ export class AppComponent {
   }
 
   login () {
-    this.sign.in(this.key, this.secret, (state: any) => {
-      if (state) {
+    // tslint:disable-next-line:no-shadowed-variable
+    this.sign.in(this.key, this.secret, (state: Boolean) => {
+      let test: any;
+      test = state;
+      if (test) {
         this.isLogin = true;
         this.signIn();
       } else {
@@ -55,14 +59,14 @@ export class AppComponent {
   }
 
   buySelect (event: any) {
+    this.ws.removePrevChannel('ticker', this.defaultBuy + '_' + this.defaultCurrency);
     this.defaultBuy = event.target.value;
-    console.log(this.defaultBuy);
     this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
   }
 
   currencySelect (event: any) {
+    this.ws.removePrevChannel('ticker', this.defaultBuy + '_' + this.defaultCurrency);
     this.defaultCurrency = event.target.value;
-    console.log(this.defaultCurrency);
     this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
   }
 

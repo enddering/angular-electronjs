@@ -5,6 +5,7 @@ import { SessionService } from './services/session.service';
 import { LoginService } from './services/login.service';
 import { OkexwsService } from './services/okexws.service';
 import { LangService } from './services/lang.service';
+import { HuobiwsService } from './services/huobiws.service';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,6 @@ import { LangService } from './services/lang.service';
     BrowserModule
   ],
   bootstrap: [AppComponent],
-  providers: [SessionService, LoginService, OkexwsService, LangService]
+  providers: [SessionService, LoginService, OkexwsService, LangService, HuobiwsService]
 })
 export class AppModule { }

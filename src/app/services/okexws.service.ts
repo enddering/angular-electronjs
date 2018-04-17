@@ -5,8 +5,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class OkexwsService {
   private wssUrl = 'wss://real.okex.com:10441/websocket';
   public socket: any;
-  public data: any;
-
+  public overTime = 8000;
   public tickerData: any;
   public depthData: any;
   public depthsData: any;
@@ -35,9 +34,17 @@ export class OkexwsService {
     };
 
     this.socket.onmessage = (e: any) => {
-      let data = JSON.parse(e.data)[0];
+      let data: any;
+      data = JSON.parse(e.data);
+
+      if (data.event === 'pong') {
+        console.log('pong');
+        return true;
+      } else {
+        data = data[0];
+      }
       let tag = data.channel.split('_').pop();
-      
+
       if (data.channel.indexOf('depth_') > -1) {
         tag = 'depths';
       }
@@ -45,33 +52,64 @@ export class OkexwsService {
       if (data.channel.indexOf('kline_') > -1) {
         tag = 'kline';
       }
-      console.log(tag, data)
+
       switch (tag) {
         case 'ticker':
-          this.tickerData = JSON.stringify(data);
+          this.tickerData = data.data;
         break;
         case 'depth':
-          this.depthData = data;
+          this.depthData = data.data;
         break;
         case 'deals':
-          this.dealsData = data;
+          this.dealsData = data.data;
         break;
         case 'kline':
-          this.klineData = data;
+          this.klineData = data.data;
         break;
         case 'order':
-          this.orderData = data;
+          this.orderData = data.data;
         break;
         case 'balance':
-          this.balanceData = data;
+          this.balanceData = data.data;
         break;
       }
-
-      console.log(this.tickerData);
     };
+
+    setInterval(() => {
+      this.socket.send('{"event": "ping"}');
+    }, 5000);
   }
 
   send (tag, x, y = null, sign = null) {
+    let channel: any;
+    channel = this.getChannel(tag, x, y);
+
+    let signParamters: any;
+    signParamters = {
+      api_key: '',
+      secret: Md5.hashStr('')
+    };
+
+    let parameters: any;
+    parameters = {event: 'addChannel', channel: channel, parameters: signParamters};
+    if (sign) {
+      signParamters.api_key = sign.key;
+      signParamters.secret  = Md5.hashStr('api_key=' + sign.key + '&secret_key=' + sign.secret);
+    } else {
+      delete parameters.parameters;
+    }
+
+    this.socket.send(JSON.stringify(parameters));
+  }
+
+  removePrevChannel (tag: any, x, y = null) {
+    let channel: string;
+    channel = this.getChannel(tag, x, y);
+
+    this.socket.send('{"event":"removeChannel","channel":"' + channel + '"}');
+  }
+
+  private getChannel(tag, x, y = null): string {
     let channel = '';
     if (!y) {
       channel = this.channel[tag].replace('X', x);
@@ -79,19 +117,10 @@ export class OkexwsService {
       channel = this.channel[tag].replace(/([X])(.*?)([Y])/, x + '_' + tag + '_' + y);
     }
 
-    let signParamters = {
-      api_key: '',
-      secret: Md5.hashStr('')
-    }
+    return channel;
+  }
 
-    let parameters = {event: 'addChannel', channel: channel, parameters: signParamters};
-    if (sign) {
-      signParamters.api_key = sign.key;
-      signParamters.secret  = Md5.hashStr('api_key=' + sign.key + '&secret_key=' + sign.secret);
-    } else {
-      delete parameters.parameters;
-    }
-    
-    this.socket.send(JSON.stringify(parameters));
+  ping () {
+
   }
 }
