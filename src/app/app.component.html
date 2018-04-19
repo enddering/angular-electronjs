@@ -8,7 +8,7 @@
       <label for="api-secret">APISecret</label>
       <input (keyup)="inputSecret($event)" type="text" class="form-control" id="api-secret" placeholder="API Secret">
     </div>
-    <button type="submit" id="sign" class="btn btn-primary"(click)="login()">Login</button>
+    <button type="submit" id="sign" class="btn btn-primary" (click)="login()">Login</button>
   </div>
 
   <div class="container-fluid" id="programme-in" [class.hidden]="!isLogin">
@@ -21,14 +21,14 @@
         <div class="form-row align-items-center">
           <div class="col-auto my-1">
             <select (change)="buySelect($event)" class="custom-select mr-sm-2" id="buy-currency">
-              <option selected>Buy</option>
-              <option *ngFor="let buyCoin of buyList" value="{{buyCoin}}">{{buyCoin.toUpperCase()}}</option>
+              <option disabled>Buy</option>
+              <option *ngFor="let buyCoin of buyList" value="{{buyCoin}}" [selected]="buyCoin == defaultBuy">{{buyCoin.toUpperCase()}}</option>
             </select>
           </div>
           <div class="col-auto my-1">
             <select (change)="currencySelect($event)" class="custom-select mr-sm-2" id="use-currency">
-              <option selected>use</option>
-              <option *ngFor="let currency of currencyList" value="{{currency}}">{{currency.toUpperCase()}}</option>
+              <option disabled>use</option>
+              <option *ngFor="let currency of currencyList" value="{{currency}}" [selected]="currency == defaultCurrency">{{currency.toUpperCase()}}</option>
             </select>
           </div>
           <div class="col-auto my-1 align-items-center">
@@ -41,39 +41,43 @@
             <button type="submit" class="btn btn-primary">Submit</button>
           </div>
         </div>
-
-        <table class="table table-sm table-hover" *ngIf="ws.tickerData">
-          <thead>
-              <tr>
-                <th scope="col">Buy</th>
-                <th scope="col">Sell</th>
-                <th scope="col">Vol</th>
-                <th scope="col">Last</th>
-                <th scope="col">DayHigh</th>
-                <th scope="col">DayLow</th>
-                <th scope="col">Close</th>
-                <th scope="col">Open</th>
-                <th scope="col">Change</th>            
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{ws.tickerData.buy}}</td>
-                <td>{{ws.tickerData.sell}}</td>
-                <td>{{ws.tickerData.vol}}</td>
-                <td>{{ws.tickerData.last}}</td>
-                <td>{{ws.tickerData.dayHigh}}</td>
-                <td>{{ws.tickerData.dayLow}}</td>
-                <td>{{ws.tickerData.close}}</td>
-                <td>{{ws.tickerData.open}}</td>
-                <td>{{ws.tickerData.change}}</td>
-              </tr>
-          </table>
+        <div class="tickerDetail" *ngIf="ws.tickerData">
+            <h6>{{ws.tickerData.channel}}</h6>
+            <div class="justify-content-start align-items-center">
+                <button type="button" class="btn btn-primary">
+                    Buy <span class="badge badge-light">{{ws.tickerData.data.buy}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Sell <span class="badge badge-light">{{ws.tickerData.data.sell}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Vol <span class="badge badge-light">{{ws.tickerData.data.vol}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    last <span class="badge badge-light">{{ws.tickerData.data.last}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    DayHigh <span class="badge badge-light">{{ws.tickerData.data.dayHigh}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    DayLow <span class="badge badge-light">{{ws.tickerData.data.dayLow}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Close <span class="badge badge-light">{{ws.tickerData.data.close}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Open <span class="badge badge-light">{{ws.tickerData.data.open}}</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Change <span class="badge badge-light">{{ws.tickerData.data.change}}</span>
+                </button>
+            </div>
+        </div>
       </div>
     </div>
 
     <div class="container-fluid">
-        
+
     </div>
 
   </div>

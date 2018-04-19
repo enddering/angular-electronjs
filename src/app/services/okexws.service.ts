@@ -55,22 +55,22 @@ export class OkexwsService {
 
       switch (tag) {
         case 'ticker':
-          this.tickerData = data.data;
+          this.tickerData = data;
         break;
         case 'depth':
-          this.depthData = data.data;
+          this.depthData = data;
         break;
         case 'deals':
-          this.dealsData = data.data;
+          this.dealsData = data;
         break;
         case 'kline':
-          this.klineData = data.data;
+          this.klineData = data;
         break;
         case 'order':
-          this.orderData = data.data;
+          this.orderData = data;
         break;
         case 'balance':
-          this.balanceData = data.data;
+          this.balanceData = data;
         break;
       }
     };

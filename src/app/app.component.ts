@@ -2,6 +2,7 @@ import { Component, state } from '@angular/core';
 import { Md5 } from 'ts-md5/dist/md5';
 import { LoginService } from './services/login.service';
 import { OkexwsService } from './services/okexws.service';
+import { HuobiwsService } from './services/huobiws.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,12 +13,12 @@ export class AppComponent {
   private key: string;
   private secret: string;
   public isLogin = false;
-  public defaultBuy      = 'mith';
+  public defaultBuy      = 'trx';
   public defaultCurrency = 'usdt';
 
-  public buyList = ['mith', 'trx', 'okb'];
+  public buyList = ['mith', 'trx', 'okb', 'lrc', 'btm', 'eos', 'hmc'];
   public currencyList = ['usdt', 'btc', 'eth'];
-  constructor (private sign: LoginService, private ws: OkexwsService) {
+  constructor (private sign: LoginService, private ws: OkexwsService, private hbWs: HuobiwsService) {
    this.title = 'Hello World';
    // tslint:disable-next-line:no-shadowed-variable
    this.sign.check((state: Boolean) => {
@@ -32,7 +33,7 @@ export class AppComponent {
 
   signIn () {
     this.ws.init(() => {
-      // this.ws.send('ticker', 'trx_usdt');
+      this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
     });
   }
 
