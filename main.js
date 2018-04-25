@@ -11,7 +11,8 @@ function createWindow() {
     win = new BrowserWindow({
         width: 800,
         height: 600,
-        frame: false
+        frame: false,
+        icon: path.join(__dirname, 'assets/icons/64x64.png')
     })
 
     // load the dist folder from Angular
@@ -28,8 +29,7 @@ function createWindow() {
         win = null
     })
 }
-
-app.dock.setIcon(path.join(__dirname, 'dist/assets/icon.png'))
+app.dock.setIcon(path.join(__dirname, 'assets/icons/128x128.png'))
 app.on('ready', createWindow)
 
 

@@ -13,12 +13,12 @@ export class AppComponent {
   private key: string;
   private secret: string;
   public isLogin = false;
-  public defaultBuy      = 'trx';
+  public defaultBuy      = 'int';
   public defaultCurrency = 'usdt';
 
-  public buyList = ['mith', 'trx', 'okb', 'lrc', 'btm', 'eos', 'hmc'];
+  public buyList = ['mith', 'snt', 'int', 'btm', 'gtc', 'trx', 'okb', 'lrc', 'btm', 'eos', 'hmc'];
   public currencyList = ['usdt', 'btc', 'eth'];
-  constructor (private sign: LoginService, private ws: OkexwsService, private hbWs: HuobiwsService) {
+  constructor (private sign: LoginService, public ws: OkexwsService) {
    this.title = 'Hello World';
    // tslint:disable-next-line:no-shadowed-variable
    this.sign.check((state: Boolean) => {
@@ -32,8 +32,13 @@ export class AppComponent {
   }
 
   signIn () {
+    this.initSocket();
+  }
+
+  initSocket () {
     this.ws.init(() => {
       this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
+      this.ws.send('depths', this.defaultBuy + '_' + this.defaultCurrency, 20);
     });
   }
 
@@ -48,9 +53,7 @@ export class AppComponent {
   login () {
     // tslint:disable-next-line:no-shadowed-variable
     this.sign.in(this.key, this.secret, (state: Boolean) => {
-      let test: any;
-      test = state;
-      if (test) {
+      if (state) {
         this.isLogin = true;
         this.signIn();
       } else {
@@ -60,15 +63,15 @@ export class AppComponent {
   }
 
   buySelect (event: any) {
-    this.ws.removePrevChannel('ticker', this.defaultBuy + '_' + this.defaultCurrency);
     this.defaultBuy = event.target.value;
-    this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
+    this.ws.close();
+    this.initSocket();
   }
 
   currencySelect (event: any) {
-    this.ws.removePrevChannel('ticker', this.defaultBuy + '_' + this.defaultCurrency);
     this.defaultCurrency = event.target.value;
-    this.ws.send('ticker', this.defaultBuy + '_' + this.defaultCurrency);
+    this.ws.close();
+    this.initSocket();
   }
 
   Notification () {

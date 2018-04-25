@@ -11,7 +11,7 @@ export class LoginService {
 
   check (caallback) {
     if (!this.sess.get(this.sid)) {
-      return caallback(false);
+      return caallback(true);
     } else {
       this.sign = this.sess.get(this.sid);
       return caallback(true);

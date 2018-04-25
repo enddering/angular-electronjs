@@ -42,42 +42,58 @@
           </div>
         </div>
         <div class="tickerDetail" *ngIf="ws.tickerData">
-            <h6>{{ws.tickerData.channel}}</h6>
-            <div class="justify-content-start align-items-center">
-                <button type="button" class="btn btn-primary">
+          <h6>{{ws.tickerData.channel}}</h6>
+          <div class="justify-content-start align-items-center">
+            <button type="button" class="btn btn-primary">
                     Buy <span class="badge badge-light">{{ws.tickerData.data.buy}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     Sell <span class="badge badge-light">{{ws.tickerData.data.sell}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     Vol <span class="badge badge-light">{{ws.tickerData.data.vol}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     last <span class="badge badge-light">{{ws.tickerData.data.last}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     DayHigh <span class="badge badge-light">{{ws.tickerData.data.dayHigh}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     DayLow <span class="badge badge-light">{{ws.tickerData.data.dayLow}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     Close <span class="badge badge-light">{{ws.tickerData.data.close}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     Open <span class="badge badge-light">{{ws.tickerData.data.open}}</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                     Change <span class="badge badge-light">{{ws.tickerData.data.change}}</span>
                 </button>
-            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="container-fluid">
-
+    <div id="depths" *ngIf="ws.depthsData">
+        <h6>{{ws.depthsData.channel}}</h6>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" colspan="2">Buy</th>
+            <th scope="col" colspan="2">Seller</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of ws.depthsData.data.bids; index as i">
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+            <td>{{ws.depthsData.data.asks.sort()[i][0]}}</td>
+            <td>{{ws.depthsData.data.asks.sort()[i][1]}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>

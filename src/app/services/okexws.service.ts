@@ -13,6 +13,7 @@ export class OkexwsService {
   public klineData: any;
   public orderData: any;
   public balanceData: any;
+  private interval: any;
 
   private channel = {
     ticker  : 'ok_sub_spot_X_ticker',
@@ -30,6 +31,7 @@ export class OkexwsService {
   init (callback) {
     this.socket = new WebSocket(this.wssUrl);
     this.socket.onopen = (e: any) => {
+      this.ping();
       return callback();
     };
 
@@ -38,14 +40,13 @@ export class OkexwsService {
       data = JSON.parse(e.data);
 
       if (data.event === 'pong') {
-        console.log('pong');
         return true;
       } else {
         data = data[0];
       }
       let tag = data.channel.split('_').pop();
 
-      if (data.channel.indexOf('depth_') > -1) {
+      if (data.channel.indexOf('depths_') > -1) {
         tag = 'depths';
       }
 
@@ -59,6 +60,9 @@ export class OkexwsService {
         break;
         case 'depth':
           this.depthData = data;
+        break;
+        case 'depths':
+          this.depthsData = data;
         break;
         case 'deals':
           this.dealsData = data;
@@ -74,8 +78,10 @@ export class OkexwsService {
         break;
       }
     };
+  }
 
-    setInterval(() => {
+  ping () {
+    this.interval = setInterval(() => {
       this.socket.send('{"event": "ping"}');
     }, 5000);
   }
@@ -102,6 +108,11 @@ export class OkexwsService {
     this.socket.send(JSON.stringify(parameters));
   }
 
+  close () {
+    clearInterval(this.interval);
+    this.socket.close();
+  }
+
   removePrevChannel (tag: any, x, y = null) {
     let channel: string;
     channel = this.getChannel(tag, x, y);
@@ -118,9 +129,5 @@ export class OkexwsService {
     }
 
     return channel;
-  }
-
-  ping () {
-
   }
 }
